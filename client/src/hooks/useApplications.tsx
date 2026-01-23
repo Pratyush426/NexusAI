@@ -27,6 +27,8 @@ export interface CreateApplicationInput {
   notes?: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export function useApplications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -35,7 +37,7 @@ export function useApplications() {
     queryKey: ['applications', user?.id],
     queryFn: async () => {
       // Fetch from local backend
-      const res = await fetch('/api/all');
+      const res = await fetch(`${API_URL}/api/all`);
       const json = await res.json();
 
       if (!json.success) throw new Error(json.error || 'Failed to fetch');

@@ -32,7 +32,8 @@ export function useProfile() {
     queryFn: async () => {
       if (!user?.email) return null;
 
-      const response = await fetch(`http://localhost:3000/api/users/profile?email=${encodeURIComponent(user.email)}`);
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_URL}/api/users/profile?email=${encodeURIComponent(user.email)}`);
 
       if (!response.ok) {
         if (response.status === 404) return null; // Profile not found is valid
@@ -49,7 +50,8 @@ export function useProfile() {
     mutationFn: async (input: UpdateProfileInput) => {
       if (!user?.email) throw new Error('Not authenticated');
 
-      const response = await fetch('http://localhost:3000/api/users/sync', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_URL}/api/users/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Search, Filter, MapPin, Calendar, DollarSign, MoreVertical, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Card, CardContent } from '../components/ui/Card';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Card, CardContent } from '../components/ui/card';
 import { fetchApplications } from '../lib/api';
 
 const JobCard = ({ job }) => {

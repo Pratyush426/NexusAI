@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Lock, User, ArrowRight, Github, Chrome } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
 
@@ -155,7 +155,8 @@ const Auth = () => {
                 ? { email, password }
                 : { name, email, password };
 
-            const response = await fetch(`http://localhost:3000${endpoint}`, {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

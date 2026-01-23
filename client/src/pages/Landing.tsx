@@ -282,7 +282,8 @@ export default function Landing() {
       // Sync user to backend
       if (user) {
         try {
-          await fetch('http://localhost:3000/api/users/sync', {
+          const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+          await fetch(`${API_URL}/api/users/sync`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -340,7 +341,8 @@ export default function Landing() {
         }
 
         // Send to Backend
-        await fetch('/api/create', {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        await fetch(`${API_URL}/api/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
