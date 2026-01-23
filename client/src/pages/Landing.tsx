@@ -14,7 +14,7 @@ import {
   Loader2,
 } from 'lucide-react';
 
-import { LandingBackground } from '@/components/backgrounds/LandingBackground';
+import FloatingLines from '@/components/backgrounds/FloatingLines';
 import { CompanyMarquee } from '@/components/CompanyMarquee';
 import { useApplications, ApplicationStatus } from '@/hooks/useApplications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -371,169 +371,211 @@ export default function Landing() {
   };
 
   return (
-    <LandingBackground>
-      <div className="relative z-10 w-full">
-        <Navbar />
+    <div className="relative z-10 w-full min-h-screen bg-background">
+      <Navbar />
 
-        {/* Hero Section */}
-        <section className="relative overflow-hidden">
-          {/* Removed radial gradient as Aurora provides background */}
-          <div className="container relative py-24 md:py-32">
-            <div className="max-w-3xl mx-auto text-center animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-                <Sparkles className="h-4 w-4" />
-                From INBOX to INSIGHTS
-              </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-brand font-bold tracking-tight mb-6">
-                <span className="gradient-text">JobTrackr.Co</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-4">
-                Track every job. Never miss an opportunity.
-              </p>
-              <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-                The modern job application tracker that helps you stay organized, monitor your progress, and land your dream job faster.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                {!user && (
-                  <Button size="lg" className="w-full sm:w-auto group" asChild>
-                    <Link to="/auth?mode=signup">
-                      Get Started
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Animated Background - Hero Only */}
+        <div className="absolute inset-0 z-0">
+          <FloatingLines
+            enabledWaves={["top", "middle", "bottom"]}
+            lineCount={5}
+            lineDistance={5}
+            bendRadius={5}
+            bendStrength={-0.5}
+            interactive={true}
+            parallax={true}
+          />
+          {/* Readability overlay */}
+          <div className="absolute inset-0 bg-background/30 backdrop-blur-sm pointer-events-none" />
+        </div>
+
+        <div className="container relative py-24 md:py-32 z-10">
+          <div className="max-w-3xl mx-auto text-center animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+              <Sparkles className="h-4 w-4" />
+              From INBOX to INSIGHTS
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-brand font-bold tracking-tight mb-6">
+              <span className="gradient-text">JobTrackr.Co</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-4">
+              Track every job. Never miss an opportunity.
+            </p>
+            <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+              The modern job application tracker that helps you stay organized, monitor your progress, and land your dream job faster.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {!user && (
+                <Button size="lg" className="w-full sm:w-auto group" asChild>
+                  <Link to="/auth?mode=signup">
+                    Get Started
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              )}
+              {user ? (
+                !isGmailConnected && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto gap-2"
+                    onClick={handleAuthClick}
+                    disabled={isAuthorizing}
+                  >
+                    {isAuthorizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                    {isAuthorizing ? 'Syncing...' : 'Connect Gmail'}
                   </Button>
-                )}
-                {user ? (
-                  !isGmailConnected && (
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-full sm:w-auto gap-2"
-                      onClick={handleAuthClick}
-                      disabled={isAuthorizing}
-                    >
-                      {isAuthorizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-                      {isAuthorizing ? 'Syncing...' : 'Connect Gmail'}
-                    </Button>
-                  )
-                ) : (
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2" asChild>
-                    <Link to="/auth?gmail=true">
-                      <Mail className="h-4 w-4" />
-                      Connect Gmail
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-            {user && isGmailConnected && <LandingStats />}
-          </div>
-          <CompanyMarquee />
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 bg-background/50 backdrop-blur-sm">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                Everything you need to track your job search
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Powerful features designed to help you stay on top of every application and interview.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  icon: Briefcase,
-                  title: 'Application Tracking',
-                  description: 'Keep all your job applications organized in one place with status updates.',
-                },
-                {
-                  icon: BarChart3,
-                  title: 'Analytics Dashboard',
-                  description: 'Visualize your job search progress with beautiful charts and metrics.',
-                },
-                {
-                  icon: FileSearch,
-                  title: 'Smart Filters',
-                  description: 'Quickly find applications by status, company, or date with powerful filters.',
-                },
-                {
-                  icon: CheckCircle2,
-                  title: 'Status Updates',
-                  description: 'Track every stage from applied to offer with color-coded status badges.',
-                },
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="group p-6 rounded-2xl bg-card border border-border card-hover"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <feature.icon className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.description}</p>
-                </div>
-              ))}
+                )
+              ) : (
+                <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2" asChild>
+                  <Link to="/auth?gmail=true">
+                    <Mail className="h-4 w-4" />
+                    Connect Gmail
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
-        </section>
+          {user && isGmailConnected && <LandingStats />}
+        </div>
+        <CompanyMarquee />
+      </section>
 
-        {/* Stats Section */}
-        <section className="py-20">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { value: '10K+', label: 'Active Users' },
-                { value: '50K+', label: 'Applications Tracked' },
-                { value: '95%', label: 'User Satisfaction' },
-                { value: '24/7', label: 'Always Available' },
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-3xl md:text-4xl font-display font-bold gradient-text">
-                    {stat.value}
-                  </p>
-                  <p className="text-muted-foreground mt-1">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      {/* Features Section */}
+      <section className="relative overflow-hidden py-20 bg-background/50 backdrop-blur-sm">
+        {/* Animated Background - Features */}
+        <div className="absolute inset-0 z-0">
+          <FloatingLines
+            enabledWaves={["top", "middle", "bottom"]}
+            lineCount={5}
+            lineDistance={5}
+            bendRadius={5}
+            bendStrength={-0.5}
+            interactive={true}
+            parallax={true}
+          />
+          {/* Readability overlay */}
+          <div className="absolute inset-0 bg-background/30 backdrop-blur-sm pointer-events-none" />
+        </div>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-primary/5">
-          <div className="container">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                Ready to organize your job search?
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                Join thousands of job seekers who use JOBTRACK to land their dream jobs.
-              </p>
-              <Button size="lg" asChild>
-                <Link to={user ? "/applications" : "/auth?mode=signup"}>
-                  {user ? "See Your Applications" : "Start Tracking for Free"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="py-8 border-t border-border">
-          <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-primary" />
-              <span className="font-display font-semibold">JobTrackr.Co</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} JOBTRACK. All rights reserved.
+        <div className="container relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Everything you need to track your job search
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Powerful features designed to help you stay on top of every application and interview.
             </p>
           </div>
-        </footer>
-      </div >
-    </LandingBackground >
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Briefcase,
+                title: 'Application Tracking',
+                description: 'Keep all your job applications organized in one place with status updates.',
+              },
+              {
+                icon: BarChart3,
+                title: 'Analytics Dashboard',
+                description: 'Visualize your job search progress with beautiful charts and metrics.',
+              },
+              {
+                icon: FileSearch,
+                title: 'Smart Filters',
+                description: 'Quickly find applications by status, company, or date with powerful filters.',
+              },
+              {
+                icon: CheckCircle2,
+                title: 'Status Updates',
+                description: 'Track every stage from applied to offer with color-coded status badges.',
+              },
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="group p-6 rounded-2xl bg-card border border-border card-hover"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <feature.icon className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-black text-white">
+        <div className="container">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: '10K+', label: 'Active Users' },
+              { value: '50K+', label: 'Applications Tracked' },
+              { value: '95%', label: 'User Satisfaction' },
+              { value: '24/7', label: 'Always Available' },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold gradient-text">
+                  {stat.value}
+                </p>
+                <p className="text-muted-foreground mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative overflow-hidden py-20 bg-primary/5">
+        {/* Animated Background - CTA */}
+        <div className="absolute inset-0 z-0">
+          <FloatingLines
+            enabledWaves={["top", "middle", "bottom"]}
+            lineCount={5}
+            lineDistance={5}
+            bendRadius={5}
+            bendStrength={-0.5}
+            interactive={true}
+            parallax={true}
+          />
+          {/* Readability overlay */}
+          <div className="absolute inset-0 bg-background/30 backdrop-blur-sm pointer-events-none" />
+        </div>
+
+        <div className="container relative z-10">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Ready to organize your job search?
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Join thousands of job seekers who use JOBTRACK to land their dream jobs.
+            </p>
+            <Button size="lg" asChild>
+              <Link to={user ? "/applications" : "/auth?mode=signup"}>
+                {user ? "See Your Applications" : "Start Tracking for Free"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 border-t border-border bg-black text-white">
+        <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-5 w-5 text-primary" />
+            <span className="font-display font-semibold">JobTrackr.Co</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} JOBTRACK. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div >
   );
 }
