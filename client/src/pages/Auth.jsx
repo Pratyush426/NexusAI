@@ -184,7 +184,7 @@ const Auth = () => {
             <div className="flex items-center justify-center p-8 md:p-16 animate-in slide-in-from-left-4 duration-700">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center md:text-left">
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">JobTrackr.Co</h1>
+                        {/* Branding moved to right panel */}
                         <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900">
                             {isLogin ? 'Welcome back' : 'Create an account'}
                         </h2>
@@ -326,9 +326,11 @@ const Auth = () => {
             <div className="hidden md:block relative overflow-hidden bg-slate-900">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-secondary/80 mix-blend-multiply" />
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center opacity-50" />
-                <div className="absolute inset-0 flex flex-col justify-between p-16 text-white z-10">
-                    <div className=" font-bold text-2xl tracking-wide">JobTrackr.Co</div>
+                <div className="absolute inset-0 flex flex-col justify-center p-16 text-white z-10">
                     <div className="max-w-md animate-in slide-in-from-right-8 duration-1000 delay-200 fill-mode-backwards">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-brand font-bold tracking-tight mb-6">
+                            <span className="gradient-text">JobTrackr.Co</span>
+                        </h1>
                         <blockquote className="text-2xl font-medium mb-6">
                             "This platform completely transformed my job search. I landed my dream role in 2 weeks!"
                         </blockquote>
@@ -339,11 +341,11 @@ const Auth = () => {
                                 <div className="text-indigo-200 text-sm">Product Designer at Airbnb</div>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex gap-2">
-                        <div className="w-12 h-1 bg-white rounded-full"></div>
-                        <div className="w-2 h-1 bg-white/30 rounded-full"></div>
-                        <div className="w-2 h-1 bg-white/30 rounded-full"></div>
+                        <div className="flex gap-2 mt-8">
+                            <div className="w-12 h-1 bg-white rounded-full"></div>
+                            <div className="w-2 h-1 bg-white/30 rounded-full"></div>
+                            <div className="w-2 h-1 bg-white/30 rounded-full"></div>
+                        </div>
                     </div>
                 </div>
             </div>
