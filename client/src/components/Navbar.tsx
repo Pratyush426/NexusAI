@@ -39,7 +39,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map(({ path, label, icon: Icon }) => (
+          {user && navLinks.map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}
