@@ -323,6 +323,7 @@ const Auth = () => {
             </div>
 
             {/* Right Side - Image/Gradient */}
+            {/* Right Side - Image/Gradient */}
             <div className="hidden md:block relative overflow-hidden bg-slate-900">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-secondary/80 mix-blend-multiply" />
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center opacity-50" />

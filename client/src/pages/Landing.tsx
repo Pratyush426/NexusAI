@@ -401,7 +401,7 @@ export default function Landing() {
               <span className="gradient-text">NexusAI</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-4">
-              Track every job. Never miss an opportunity.
+              Your Job Hunt, Auto-Piloted
             </p>
             <p className="text-muted-foreground max-w-xl mx-auto mb-8">
               The modern job application tracker that helps you stay organized, monitor your progress, and land your dream job faster.
