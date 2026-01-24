@@ -12,6 +12,15 @@ Stop manually updating spreadsheets. Let the AI do the work.
 
 ---
 
+
+<div align="center">
+  <img src="client/public/assets/IMG_7385.PNG" width="32%" alt="Preview 1" />
+  <img src="client/public/assets/IMG_7384.PNG" width="32%" alt="Preview 2" />
+  <img src="client/public/assets/IMG_7383.PNG" width="32%" alt="Preview 3" />
+  
+</div>
+
+
 ## 🏗️ System Architecture
 
 NexusAI uses an **Event-Driven Architecture** to ensure the User Interface remains snappy while heavy AI processing happens in the background.
@@ -114,8 +123,3 @@ MIT License. Built with ❤️ by Pratyush.
 
 ## 📸 Application Previews
 
-<div align="center">
-  <img src="client/public/assets/IMG_7383.PNG" width="32%" alt="Preview 1" />
-  <img src="client/public/assets/IMG_7384.PNG" width="32%" alt="Preview 2" />
-  <img src="client/public/assets/IMG_7385.PNG" width="32%" alt="Preview 3" />
-</div>
