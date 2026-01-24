@@ -1,4 +1,4 @@
-# JobTrackr 🚀
+# NexusAI 🚀
 ### From Inbox to Insights: The AI-Powered Career Assistant
 
 [![React](https://img.shields.io/badge/React-18-blue?style=flat-square&logo=react)](https://react.dev/)
@@ -6,7 +6,7 @@
 [![BullMQ](https://img.shields.io/badge/BullMQ-Queue-red?style=flat-square)](https://docs.bullmq.io/)
 [![Google Gemini](https://img.shields.io/badge/AI-Gemini_Flash-purple?style=flat-square&logo=google)](https://deepmind.google/technologies/gemini/)
 
-JobTrackr is not just a CRUD app—it's an intelligent **Application Tracking System (ATS)** for candidates. It automatically syncs with your Gmail, monitors job application emails, extracts key details (Company, Role, Status) using **LLMs**, and visualizes your progress on a real-time dashboard.
+NexusAI is not just a CRUD app—it's an intelligent **Application Tracking System (ATS)** for candidates. It automatically syncs with your Gmail, monitors job application emails, extracts key details (Company, Role, Status) using **LLMs**, and visualizes your progress on a real-time dashboard.
 
 Stop manually updating spreadsheets. Let the AI do the work.
 
@@ -14,7 +14,7 @@ Stop manually updating spreadsheets. Let the AI do the work.
 
 ## 🏗️ System Architecture
 
-JobTrackr uses an **Event-Driven Architecture** to ensure the User Interface remains snappy while heavy AI processing happens in the background.
+NexusAI uses an **Event-Driven Architecture** to ensure the User Interface remains snappy while heavy AI processing happens in the background.
 
 ```mermaid
 graph TD
@@ -78,8 +78,8 @@ graph TD
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/Pratyush426/jobtrack.git
-cd jobtrack
+git clone https://github.com/Pratyush426/nexusai.git
+cd nexusai
 ```
 
 ### 2. Backend Setup

@@ -21,13 +21,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginLocal = (userData?: any) => {
     const userObj = userData || { email: 'user@example.com', name: 'User' };
-    localStorage.setItem('jobtrack_user', JSON.stringify(userObj));
+    localStorage.setItem('nexusai_user', JSON.stringify(userObj));
     setUser({ id: 'local-user', ...userObj } as any); // Cast to any for now, or define a proper LocalUser type
   };
 
   useEffect(() => {
     // Check local storage on mount
-    const storedUser = localStorage.getItem('jobtrack_user');
+    const storedUser = localStorage.getItem('nexusai_user');
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return; // If local user found, don't proceed with Supabase check immediately
       } catch (e) {
         console.error("Failed to parse stored user", e);
-        localStorage.removeItem('jobtrack_user');
+        localStorage.removeItem('nexusai_user');
       }
     }
 
@@ -82,9 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    localStorage.removeItem('jobtrack_auth');
-    localStorage.removeItem('jobtrack_user');
-    localStorage.removeItem('jobtrack_gmail_connected');
+    localStorage.removeItem('nexusai_auth');
+    localStorage.removeItem('nexusai_user');
+    localStorage.removeItem('nexusai_gmail_connected');
     setUser(null);
     await supabase.auth.signOut();
   };

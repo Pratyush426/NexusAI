@@ -35,11 +35,11 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-black">
       <div className="container flex h-24 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 border border-white px-3 py-1">
-          <span className="font-brand text-2xl font-bold gradient-text">J.Co</span>
+          <span className="font-brand text-2xl font-bold gradient-text">N.Ai</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          {user && navLinks.map(({ path, label, icon: Icon }) => (
+          {navLinks.map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}

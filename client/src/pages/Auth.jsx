@@ -126,7 +126,7 @@ const Auth = () => {
                     })
                 });
             }
-            alert('Emails synchronized with JobTrack backend!');
+            alert('Emails synchronized with NexusAI backend!');
         } catch (err) {
             console.error(err);
             alert('Error syncing emails: ' + err.message);
@@ -329,7 +329,7 @@ const Auth = () => {
                 <div className="absolute inset-0 flex flex-col justify-center p-16 text-white z-10">
                     <div className="max-w-md animate-in slide-in-from-right-8 duration-1000 delay-200 fill-mode-backwards">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-brand font-bold tracking-tight mb-6">
-                            <span className="gradient-text">JobTrackr.Co</span>
+                            <span className="gradient-text">NexusAI</span>
                         </h1>
                         <blockquote className="text-2xl font-medium mb-6">
                             "This platform completely transformed my job search. I landed my dream role in 2 weeks!"

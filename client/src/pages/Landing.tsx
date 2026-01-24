@@ -211,7 +211,7 @@ export default function Landing() {
   const [isGmailConnected, setIsGmailConnected] = useState(false);
 
   useEffect(() => {
-    setIsGmailConnected(!!localStorage.getItem('jobtrack_gmail_connected'));
+    setIsGmailConnected(!!localStorage.getItem('nexusai_gmail_connected'));
   }, []);
 
   // Google Auth Configuration
@@ -277,7 +277,7 @@ export default function Landing() {
       if (!user) {
         loginLocal();
       }
-      localStorage.setItem('jobtrack_gmail_connected', 'true');
+      localStorage.setItem('nexusai_gmail_connected', 'true');
 
       // Sync user to backend
       if (user) {
@@ -354,7 +354,7 @@ export default function Landing() {
           })
         });
       }
-      alert('Emails synchronized with JobTrack backend!');
+      alert('Emails synchronized with NexusAI backend!');
     } catch (err: any) {
       console.error(err);
       alert('Error syncing emails: ' + err.message);
@@ -398,7 +398,7 @@ export default function Landing() {
               From INBOX to INSIGHTS
             </div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-brand font-bold tracking-tight mb-6">
-              <span className="gradient-text">JobTrackr.Co</span>
+              <span className="gradient-text">NexusAI</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-4">
               Track every job. Never miss an opportunity.
@@ -552,7 +552,7 @@ export default function Landing() {
               Ready to organize your job search?
             </h2>
             <p className="text-muted-foreground mb-8">
-              Join thousands of job seekers who use JOBTRACK to land their dream jobs.
+              Join thousands of job seekers who use NexusAI to land their dream jobs.
             </p>
             <Button size="lg" asChild>
               <Link to={user ? "/applications" : "/auth?mode=signup"}>
@@ -569,10 +569,10 @@ export default function Landing() {
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Briefcase className="h-5 w-5 text-primary" />
-            <span className="font-display font-semibold">JobTrackr.Co</span>
+            <span className="font-display font-semibold">NexusAI</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} JOBTRACK. All rights reserved.
+            © {new Date().getFullYear()} NexusAI. All rights reserved.
           </p>
         </div>
       </footer>
