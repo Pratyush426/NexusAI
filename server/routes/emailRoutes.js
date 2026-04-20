@@ -1,15 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { showHome, createEmail, addEmailQueue, classifyEmailById, getAllEmails } = require("../controllers/emailController");
+const { protect } = require('../middleware/auth');
+const {
+  showHome,
+  createEmail,
+  addEmailQueue,
+  classifyEmailById,
+  getAllEmails
+} = require("../controllers/emailController");
 
+// Public — Gmail OAuth landing page
 router.get("/", showHome);
 
-router.post("/create", createEmail);
-
-router.post("/add-email", addEmailQueue);
-
-router.post("/classify/:id", classifyEmailById);
-
-router.get("/all", getAllEmails);
+// Protected — all email operations require valid JWT
+router.post("/api/create", protect, createEmail);
+router.get("/api/emails", protect, getAllEmails);
+router.post("/api/add-email", protect, addEmailQueue);
+router.post("/api/classify/:id", protect, classifyEmailById);
 
 module.exports = router;

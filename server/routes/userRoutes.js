@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { protect } = require('../middleware/auth');
 const userController = require('../controllers/userController');
 
-router.post('/sync', userController.syncUser);
-router.get('/profile', userController.getUserProfile);
+// Both endpoints require a valid JWT
+router.get('/profile', protect, userController.getUserProfile);
+router.post('/sync', protect, userController.syncUser);
 
 module.exports = router;

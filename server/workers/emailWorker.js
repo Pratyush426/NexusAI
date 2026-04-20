@@ -6,12 +6,11 @@ const { classifyStatusNLP } = require("../services/classifier/nlpClassifier");
 const connectDB = require("../config/db");
 require("dotenv").config();
 
-// Connect to DB for the worker process
-connectDB();
+// Connect to DB for the worker process and wait
+connectDB().then(() => {
+  console.log("Worker process started via Bull...");
 
-console.log("Worker process started via Bull...");
-
-emailQueue.process(async (job) => {
+  emailQueue.process(async (job) => {
     console.log(`[Job ${job.id}] Processing email: ${job.data.emailData?.subject}`);
     const { emailId, emailData } = job.data;
 
@@ -61,3 +60,4 @@ emailQueue.process(async (job) => {
 emailQueue.on('failed', (job, err) => {
     console.log(`Job ${job.id} failed with error ${err.message}`);
 });
+}); // <--- added to close connectDB().then(() => {

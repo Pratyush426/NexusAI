@@ -3,6 +3,7 @@ import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useApplications } from '@/hooks/useApplications';
+import { useGmailSync } from '@/hooks/useGmailSync';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +26,7 @@ export default function Profile() {
   const { user } = useAuth();
   const { profile, isLoading, updateProfile } = useProfile();
   const { stats } = useApplications();
+  const { handleGmailSync, isGmailSyncing } = useGmailSync();
 
   const [fullName, setFullName] = useState('');
   const [resumeUrl, setResumeUrl] = useState('');
@@ -124,11 +126,15 @@ export default function Profile() {
                 <span className="text-sm">
                   Gmail {profile?.gmail_connected ? 'connected' : 'not connected'}
                 </span>
-                {!profile?.gmail_connected && (
-                  <Button variant="link" size="sm" className="ml-auto text-primary">
-                    Connect
-                  </Button>
-                )}
+                <Button 
+                  variant="link" 
+                  size="sm" 
+                  className="ml-auto text-primary"
+                  onClick={() => handleGmailSync(() => updateProfile.mutateAsync({ gmail_connected: true }))}
+                  disabled={isGmailSyncing}
+                >
+                  {isGmailSyncing ? 'Syncing...' : profile?.gmail_connected ? 'Sync Again' : 'Connect'}
+                </Button>
               </div>
             </CardContent>
           </Card>

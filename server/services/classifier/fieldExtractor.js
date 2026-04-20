@@ -61,12 +61,27 @@ exports.extractBasicFields = async (email = {}) => {
         Do not add markdown formatting like \`\`\`json. Just the raw JSON string.
         `;
 
-        const completion = await groq.chat.completions.create({
-            messages: [{ role: "user", content: prompt }],
-            model: "llama-3.3-70b-versatile",
-            temperature: 0,
-            response_format: { type: "json_object" }
-        });
+        let completion;
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+            try {
+                completion = await groq.chat.completions.create({
+                    messages: [{ role: "user", content: prompt }],
+                    model: "llama-3.3-70b-versatile",
+                    temperature: 0,
+                    response_format: { type: "json_object" }
+                });
+                break; // Success, exit loop
+            } catch (err) {
+                attempts++;
+                console.warn(`Groq extraction attempt ${attempts} failed:`, err.message);
+                if (attempts >= maxAttempts) throw err; // Throw on final failure
+                // Wait 1s, 2s...
+                await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempts - 1)));
+            }
+        }
 
         const text = completion.choices[0]?.message?.content || "{}";
         const parsed = JSON.parse(text);

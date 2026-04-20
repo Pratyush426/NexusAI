@@ -1,0 +1,58 @@
+services:
+  # 1. Express API Web Service
+  - type: web
+    name: jobtrack-api
+    env: node
+    region: oregon 
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # Set this securely in the Render Dashboard
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: jobtrack-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: jobtrack-redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false # Set securely in Dashboard
+      - key: CLIENT_URL
+        sync: false # Set this to your Vercel URL later
+        
+  # 2. Background Email Worker
+  - type: worker
+    name: jobtrack-worker
+    env: node
+    region: oregon
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm run start:worker
+    envVars:
+      - key: MONGO_URI
+        sync: false # Must match Web Service
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: jobtrack-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: jobtrack-redis
+          property: port
+      - key: GROQ_API_KEY
+        sync: false # Must match Web Service
+
+  # 3. Redis Instance (for Queue)
+  - type: redis
+    name: jobtrack-redis
+    region: oregon
+    plan: free # Free tier Redis on Render

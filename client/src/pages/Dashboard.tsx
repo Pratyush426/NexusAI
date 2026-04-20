@@ -19,7 +19,7 @@ export default function Dashboard() {
   const { stats, isLoading } = useApplications();
   const { user } = useAuth();
 
-  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 'there';
+  const firstName = user?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
 
   return (
     <div className="min-h-screen bg-background">

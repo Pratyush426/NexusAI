@@ -7,6 +7,9 @@ const emailSchema = new mongoose.Schema({
   subject: String,
   body: String,
 
+  // Owner — which user does this email belong to?
+  userId: { type: String, default: null, index: true },
+
   // Hybrid classifier fields
   companyName: { type: String, default: "unknown" },
   appliedFrom: { type: String, default: "unknown" },
@@ -14,8 +17,6 @@ const emailSchema = new mongoose.Schema({
 
   extractDate: { type: String, default: null },
   confidence: { type: Number, default: 0 },
-
-  // Optional (keep if needed
 
   jobRole: { type: String, default: "unknown" }
 
