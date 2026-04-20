@@ -2,3 +2,6 @@ about.txt
 node_modules
 .env
 .DS_Store
+
+client/.env
+server/.env
