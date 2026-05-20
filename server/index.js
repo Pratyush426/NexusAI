@@ -18,6 +18,37 @@ app.use(require("cors")({
 app.use(express.static(path.join(__dirname, "public")));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
+app.get("/api/health", async (req, res) => {
+  const mongoose = require("mongoose");
+  const dbState = mongoose.connection.readyState;
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  
+  let redisStatus = "unknown";
+  try {
+    const emailQueue = require("./queue/queue");
+    // Check Redis connection state
+    const client = await emailQueue.client;
+    redisStatus = client ? client.status : "unknown";
+  } catch (redisErr) {
+    redisStatus = "error: " + redisErr.message;
+  }
+
+  res.status(200).json({
+    status: "healthy",
+    database: {
+      state: states[dbState] || "unknown",
+      readyState: dbState,
+    },
+    redis: redisStatus,
+    env: {
+      hasMongoUri: !!process.env.MONGO_URI,
+      hasRedisUrl: !!process.env.REDIS_URL,
+      hasRedisHost: !!process.env.REDIS_HOST,
+      hasGroqApiKey: !!process.env.GROQ_API_KEY,
+    }
+  });
+});
+
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));

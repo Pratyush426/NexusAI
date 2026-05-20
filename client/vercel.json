@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://jobtrack-api.onrender.com/api/:path*"
+      "destination": "https://jobtrack-6f1m.onrender.com/api/:path*"
     },
     {
       "source": "/((?!api/.*).*)",
