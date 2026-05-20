@@ -7,15 +7,20 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest';
 
+interface GoogleTokenClient {
+  callback?: (resp: { error?: string }) => void | Promise<void>;
+  requestAccessToken: (options: { prompt: string }) => void;
+}
+
 export function useGmailSync() {
   const [isGmailSyncing, setIsGmailSyncing] = useState(false);
   const [isGoogleApiLoaded, setIsGoogleApiLoaded] = useState(false);
-  const [tokenClient, setTokenClient] = useState<any>(null);
+  const [tokenClient, setTokenClient] = useState<GoogleTokenClient | null>(null);
   
   const { user } = useAuth();
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout | null = null;
     const initGoogle = async () => {
       await window.gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
       const tc = window.google.accounts.oauth2.initTokenClient({
@@ -29,12 +34,14 @@ export function useGmailSync() {
 
     interval = setInterval(() => {
       if (window.gapi && window.google) {
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
         window.gapi.load('client', initGoogle);
       }
     }, 300);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   const listAndSyncMessages = async (token: string) => {
@@ -53,14 +60,26 @@ export function useGmailSync() {
         userId: 'me', id: msg.id, format: 'full',
       });
       
-      const headers = full.result.payload.headers;
-      const from = headers.find((h: any) => h.name === 'From')?.value || '';
-      const date = headers.find((h: any) => h.name === 'Date')?.value || '';
-      const subject = headers.find((h: any) => h.name === 'Subject')?.value || '';
+      interface GmailHeader {
+        name: string;
+        value: string;
+      }
+      interface GmailPart {
+        mimeType: string;
+        body?: {
+          data?: string;
+        };
+      }
+
+      const headers = (full.result.payload.headers || []) as GmailHeader[];
+      const from = headers.find((h) => h.name === 'From')?.value || '';
+      const date = headers.find((h) => h.name === 'Date')?.value || '';
+      const subject = headers.find((h) => h.name === 'Subject')?.value || '';
 
       let body = '';
       if (full.result.payload.parts) {
-        const part = full.result.payload.parts.find((p: any) => p.mimeType === 'text/plain');
+        const parts = full.result.payload.parts as GmailPart[];
+        const part = parts.find((p) => p.mimeType === 'text/plain');
         if (part?.body?.data) {
           body = atob(part.body.data.replace(/-/g, '+').replace(/_/g, '/'));
         }
@@ -103,7 +122,7 @@ export function useGmailSync() {
       return;
     }
 
-    tokenClient.callback = async (resp: any) => {
+    tokenClient.callback = async (resp: { error?: string }) => {
       if (resp.error) {
         toast({
           variant: "destructive",
@@ -121,11 +140,12 @@ export function useGmailSync() {
           description: `Successfully extracted ${count} job emails and sent them for AI processing.`
         });
         if (onSuccess) onSuccess();
-      } catch (err: any) {
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
         toast({
           variant: "destructive",
           title: "Sync Failed",
-          description: "Failed to sync Gmail: " + err.message
+          description: "Failed to sync Gmail: " + errorMessage
         });
       } finally {
         setIsGmailSyncing(false);

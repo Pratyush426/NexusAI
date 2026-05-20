@@ -48,8 +48,21 @@ export function useApplications() {
       const json = await apiGetEmails();
       if (!json.success) throw new Error(json.error || 'Failed to fetch applications');
 
+      interface GmailEmailDocument {
+        _id: string;
+        userId?: string;
+        jobRole?: string;
+        subject?: string;
+        companyName?: string;
+        status?: string;
+        appliedFrom?: string;
+        extractDate?: string;
+        date?: string;
+        body?: string;
+      }
+
       // Map MongoDB email documents → Application interface
-      return json.data.map((email: any): Application => ({
+      return json.data.map((email: GmailEmailDocument): Application => ({
         id: email._id,
         user_id: email.userId || user?.id || 'unknown',
         job_title: email.jobRole !== 'unknown' ? email.jobRole : (email.subject || 'Unknown Role'),

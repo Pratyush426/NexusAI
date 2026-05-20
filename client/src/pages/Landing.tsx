@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/Navbar';
@@ -204,6 +205,12 @@ function LandingStats() {
 }
 
 
+// Google Auth Configuration
+const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest';
+
 export default function Landing() {
   const { user, loginLocal } = useAuth();
   const navigate = useNavigate();
@@ -214,16 +221,15 @@ export default function Landing() {
     setIsGmailConnected(!!localStorage.getItem('nexusai_gmail_connected'));
   }, []);
 
-  // Google Auth Configuration
-  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
-  const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest';
+  interface GoogleTokenClient {
+    callback?: (resp: { error?: string }) => void | Promise<void>;
+    requestAccessToken: (options: { prompt: string }) => void;
+  }
 
-  let tokenClient: any;
+  const tokenClientRef = useRef<GoogleTokenClient | null>(null);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout | null = null;
 
     const initGoogle = async () => {
       // Initialize GAPI
@@ -233,7 +239,7 @@ export default function Landing() {
       });
 
       // Initialize Token Client
-      tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+      tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
         callback: () => { }, // set dynamically later
@@ -243,22 +249,24 @@ export default function Landing() {
     // Wait until both scripts are available
     interval = setInterval(() => {
       if ((window as any).gapi && (window as any).google) {
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
         (window as any).gapi.load("client", initGoogle);
       }
     }, 300);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   const handleAuthClick = () => {
-    if (!tokenClient) {
+    if (!tokenClientRef.current) {
       // Re-init if needed (should check window.google first really)
       if ((window as any).google) {
-        tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+        tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
           client_id: CLIENT_ID,
           scope: SCOPES,
-          callback: '',
+          callback: () => {},
         });
       } else {
         console.error("Google scripts not loaded yet");
@@ -266,7 +274,8 @@ export default function Landing() {
       }
     }
 
-    tokenClient.callback = async (resp: any) => {
+    const tokenClient = tokenClientRef.current;
+    tokenClient.callback = async (resp: { error?: string }) => {
       if (resp.error !== undefined) {
         throw resp;
       }

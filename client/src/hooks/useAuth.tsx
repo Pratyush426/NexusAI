@@ -33,9 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         setUser(JSON.parse(storedUser));
         // Verify the token is still valid against the server
-        apiGetMe().then((data: any) => {
-          if (data?.user) {
-            setUser(data.user);
+        apiGetMe().then((data: unknown) => {
+          const res = data as { user?: AuthUser };
+          if (res?.user) {
+            setUser(res.user);
           } else {
             // Token expired/invalid — clear session
             localStorage.removeItem(TOKEN_KEY);
