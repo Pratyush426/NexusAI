@@ -13,6 +13,27 @@ const authHeaders = (): Record<string, string> => ({
     ...(getToken() ? { 'Authorization': `Bearer ${getToken()}` } : {}),
 });
 
+const handleResponse = async (res: Response) => {
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        const data = await res.json();
+        if (!res.ok) {
+            return {
+                success: false,
+                message: data.message || `Request failed with status ${res.status}`,
+                error: data.error || null,
+            };
+        }
+        return data;
+    } else {
+        const text = await res.text();
+        return {
+            success: false,
+            message: !res.ok ? `Server error ${res.status}: ${text.slice(0, 100)}` : 'Invalid response format',
+        };
+    }
+};
+
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
 export const apiRegister = async (name: string, email: string, password: string) => {
@@ -21,7 +42,7 @@ export const apiRegister = async (name: string, email: string, password: string)
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
     });
-    return res.json();
+    return handleResponse(res);
 };
 
 export const apiLogin = async (email: string, password: string) => {
@@ -30,15 +51,19 @@ export const apiLogin = async (email: string, password: string) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
     });
-    return res.json();
+    return handleResponse(res);
 };
 
 export const apiGetMe = async () => {
-    const res = await fetch(`${API_URL}/api/auth/me`, {
-        headers: authHeaders(),
-    });
-    if (!res.ok) return null;
-    return res.json();
+    try {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
+            headers: authHeaders(),
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch {
+        return null;
+    }
 };
 
 // ── Emails (Gmail sync) ───────────────────────────────────────────────────────
@@ -49,25 +74,28 @@ export const apiSaveEmail = async (emailData: Record<string, unknown>) => {
         headers: authHeaders(),
         body: JSON.stringify(emailData),
     });
-    return res.json();
+    return handleResponse(res);
 };
 
 export const apiGetEmails = async () => {
     const res = await fetch(`${API_URL}/api/emails`, {
         headers: authHeaders(),
     });
-    if (!res.ok) throw new Error('Failed to fetch emails');
-    return res.json();
+    return handleResponse(res);
 };
 
 // ── User Profile ──────────────────────────────────────────────────────────────
 
 export const apiGetProfile = async () => {
-    const res = await fetch(`${API_URL}/api/users/profile`, {
-        headers: authHeaders(),
-    });
-    if (!res.ok) return null;
-    return res.json();
+    try {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
+            headers: authHeaders(),
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch {
+        return null;
+    }
 };
 
 export const apiUpdateProfile = async (profileData: Record<string, unknown>) => {
@@ -76,8 +104,7 @@ export const apiUpdateProfile = async (profileData: Record<string, unknown>) => 
         headers: authHeaders(),
         body: JSON.stringify(profileData),
     });
-    if (!res.ok) throw new Error('Failed to update profile');
-    return res.json();
+    return handleResponse(res);
 };
 
 // ── Applications (manual) ─────────────────────────────────────────────────────
@@ -86,8 +113,7 @@ export const apiGetApplications = async () => {
     const res = await fetch(`${API_URL}/api/applications`, {
         headers: authHeaders(),
     });
-    if (!res.ok) throw new Error('Failed to fetch applications');
-    return res.json();
+    return handleResponse(res);
 };
 
 export const apiCreateApplication = async (appData: Record<string, unknown>) => {
@@ -96,8 +122,7 @@ export const apiCreateApplication = async (appData: Record<string, unknown>) => 
         headers: authHeaders(),
         body: JSON.stringify(appData),
     });
-    if (!res.ok) throw new Error('Failed to create application');
-    return res.json();
+    return handleResponse(res);
 };
 
 export const apiDeleteApplication = async (id: string) => {
@@ -105,8 +130,7 @@ export const apiDeleteApplication = async (id: string) => {
         method: 'DELETE',
         headers: authHeaders(),
     });
-    if (!res.ok) throw new Error('Failed to delete application');
-    return res.json();
+    return handleResponse(res);
 };
 
 export { API_URL };

@@ -80,7 +80,21 @@ exports.login = async (req, res) => {
 
         if (isBcryptHash) {
             // Normal bcrypt comparison
-            isMatch = await bcrypt.compare(password, user.password);
+            try {
+                isMatch = await bcrypt.compare(password, user.password);
+            } catch (compareErr) {
+                console.warn(`[Auth] Bcrypt compare failed (invalid hash format?): ${compareErr.message}`);
+                // Fallback: check if the string matches exactly as plain text
+                isMatch = (user.password === password);
+                
+                // Auto-upgrade if plain text matches
+                if (isMatch) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(password, salt);
+                    await user.save();
+                    console.log(`[Auth] Upgraded malformed/plain password to bcrypt for: ${email}`);
+                }
+            }
         } else {
             // Legacy: plain text password from old system
             isMatch = (user.password === password);
