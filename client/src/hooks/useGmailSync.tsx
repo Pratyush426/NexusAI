@@ -22,14 +22,22 @@ export function useGmailSync() {
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     const initGoogle = async () => {
-      await window.gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
-      const tc = window.google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: () => {},
-      });
-      setTokenClient(tc);
-      setIsGoogleApiLoaded(true);
+      try {
+        if (!API_KEY || !CLIENT_ID) {
+          console.warn("[Gmail Sync] Google API keys are not configured. Sync will be unavailable.");
+          return;
+        }
+        await window.gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
+        const tc = window.google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: () => {},
+        });
+        setTokenClient(tc);
+        setIsGoogleApiLoaded(true);
+      } catch (err) {
+        console.error("[Gmail Sync] Failed to initialize Google API:", err);
+      }
     };
 
     interval = setInterval(() => {

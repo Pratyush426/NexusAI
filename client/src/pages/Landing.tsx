@@ -232,18 +232,26 @@ export default function Landing() {
     let interval: NodeJS.Timeout | null = null;
 
     const initGoogle = async () => {
-      // Initialize GAPI
-      await (window as any).gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: [DISCOVERY_DOC],
-      });
+      try {
+        if (!API_KEY || !CLIENT_ID) {
+          console.warn("[Landing] Google API keys are not configured. Sync will be unavailable.");
+          return;
+        }
+        // Initialize GAPI
+        await (window as any).gapi.client.init({
+          apiKey: API_KEY,
+          discoveryDocs: [DISCOVERY_DOC],
+        });
 
-      // Initialize Token Client
-      tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: () => { }, // set dynamically later
-      });
+        // Initialize Token Client
+        tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: () => { }, // set dynamically later
+        });
+      } catch (err) {
+        console.error("[Landing] Failed to initialize Google API:", err);
+      }
     };
 
     // Wait until both scripts are available
