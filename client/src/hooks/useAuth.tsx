@@ -1,8 +1,8 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { apiLogin, apiRegister, apiGetMe } from '@/lib/api';
 
-const TOKEN_KEY = 'jobtrack_token';
-const USER_KEY  = 'jobtrack_user';
+const TOKEN_KEY = 'nexusai_token';
+const USER_KEY  = 'nexusai_user';
 
 interface AuthUser {
   id: string;

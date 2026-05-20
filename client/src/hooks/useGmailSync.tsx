@@ -101,7 +101,7 @@ export function useGmailSync() {
   };
 
   const handleGmailSync = (onSuccess?: () => void) => {
-    const token = localStorage.getItem('jobtrack_token');
+    const token = localStorage.getItem('nexusai_token');
     
     // Allow syncing if we have a token, even if `user` isn't fully loaded in state yet during auth flows
     if (!token) {

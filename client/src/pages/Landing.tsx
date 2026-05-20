@@ -439,7 +439,7 @@ export default function Landing() {
                 )
               ) : (
                 <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2" asChild>
-                  <Link to="/auth?gmail=true">
+                  <Link to="/auth?mode=signup">
                     <Mail className="h-4 w-4" />
                     Connect Gmail
                   </Link>

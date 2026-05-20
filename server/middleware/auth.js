@@ -17,6 +17,9 @@ const protect = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
+        if (!decoded || !decoded.id) {
+            return res.status(401).json({ message: 'Invalid token payload: User ID missing.' });
+        }
         req.user = decoded; // { id, email, name }
         next();
     } catch (err) {

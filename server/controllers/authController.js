@@ -7,7 +7,7 @@ const JWT_EXPIRES_IN = '7d';
 
 const generateToken = (user) => {
     return jwt.sign(
-        { id: user._id, email: user.email, name: user.name },
+        { id: user._id.toString(), email: user.email, name: user.name },
         JWT_SECRET,
         { expiresIn: JWT_EXPIRES_IN }
     );

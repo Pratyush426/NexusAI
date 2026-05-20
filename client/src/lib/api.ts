@@ -4,18 +4,18 @@
  * For production, set VITE_API_URL to your deployed backend URL.
  */
 
-const API_URL = import.meta.env.VITE_API_URL || '';  // Empty = relative (uses Vite proxy in dev)
+const API_URL = (import.meta.env.VITE_API_URL as string) || '';
 
-const getToken = () => localStorage.getItem('jobtrack_token');
+const getToken = () => localStorage.getItem('nexusai_token');
 
-const authHeaders = () => ({
+const authHeaders = (): Record<string, string> => ({
     'Content-Type': 'application/json',
     ...(getToken() ? { 'Authorization': `Bearer ${getToken()}` } : {}),
 });
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
-export const apiRegister = async (name, email, password) => {
+export const apiRegister = async (name: string, email: string, password: string) => {
     const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,7 +24,7 @@ export const apiRegister = async (name, email, password) => {
     return res.json();
 };
 
-export const apiLogin = async (email, password) => {
+export const apiLogin = async (email: string, password: string) => {
     const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,7 +43,7 @@ export const apiGetMe = async () => {
 
 // ── Emails (Gmail sync) ───────────────────────────────────────────────────────
 
-export const apiSaveEmail = async (emailData) => {
+export const apiSaveEmail = async (emailData: any) => {
     const res = await fetch(`${API_URL}/api/create`, {
         method: 'POST',
         headers: authHeaders(),
@@ -70,7 +70,7 @@ export const apiGetProfile = async () => {
     return res.json();
 };
 
-export const apiUpdateProfile = async (profileData) => {
+export const apiUpdateProfile = async (profileData: any) => {
     const res = await fetch(`${API_URL}/api/users/sync`, {
         method: 'POST',
         headers: authHeaders(),
@@ -81,9 +81,16 @@ export const apiUpdateProfile = async (profileData) => {
 };
 
 // ── Applications (manual) ─────────────────────────────────────────────────────
-// Manual applications also go to your MongoDB backend (same as Gmail emails)
 
-export const apiCreateApplication = async (appData) => {
+export const apiGetApplications = async () => {
+    const res = await fetch(`${API_URL}/api/applications`, {
+        headers: authHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch applications');
+    return res.json();
+};
+
+export const apiCreateApplication = async (appData: any) => {
     const res = await fetch(`${API_URL}/api/applications`, {
         method: 'POST',
         headers: authHeaders(),
@@ -93,7 +100,7 @@ export const apiCreateApplication = async (appData) => {
     return res.json();
 };
 
-export const apiDeleteApplication = async (id) => {
+export const apiDeleteApplication = async (id: string) => {
     const res = await fetch(`${API_URL}/api/applications/${id}`, {
         method: 'DELETE',
         headers: authHeaders(),

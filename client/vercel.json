@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://jobtrack-api.onrender.com/api/:path*"
+    },
+    {
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
