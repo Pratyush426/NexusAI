@@ -43,7 +43,7 @@ export const apiGetMe = async () => {
 
 // ── Emails (Gmail sync) ───────────────────────────────────────────────────────
 
-export const apiSaveEmail = async (emailData: any) => {
+export const apiSaveEmail = async (emailData: Record<string, unknown>) => {
     const res = await fetch(`${API_URL}/api/create`, {
         method: 'POST',
         headers: authHeaders(),
@@ -70,7 +70,7 @@ export const apiGetProfile = async () => {
     return res.json();
 };
 
-export const apiUpdateProfile = async (profileData: any) => {
+export const apiUpdateProfile = async (profileData: Record<string, unknown>) => {
     const res = await fetch(`${API_URL}/api/users/sync`, {
         method: 'POST',
         headers: authHeaders(),
@@ -90,7 +90,7 @@ export const apiGetApplications = async () => {
     return res.json();
 };
 
-export const apiCreateApplication = async (appData: any) => {
+export const apiCreateApplication = async (appData: Record<string, unknown>) => {
     const res = await fetch(`${API_URL}/api/applications`, {
         method: 'POST',
         headers: authHeaders(),
