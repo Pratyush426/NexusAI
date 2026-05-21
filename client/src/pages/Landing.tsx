@@ -359,9 +359,13 @@ export default function Landing() {
 
         // Send to Backend
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        await fetch(`${API_URL}/api/create`, {
+        const token = localStorage.getItem('nexusai_token');
+        const res = await fetch(`${API_URL}/api/create`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify({
             MessageId: msg.id,
             from,
@@ -370,6 +374,10 @@ export default function Landing() {
             body
           })
         });
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Server returned status ${res.status}: ${errorText}`);
+        }
       }
       alert('Emails synchronized with NexusAI backend!');
     } catch (err: any) {

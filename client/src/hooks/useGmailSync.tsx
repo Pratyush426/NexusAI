@@ -95,7 +95,7 @@ export function useGmailSync() {
         body = atob(full.result.payload.body.data.replace(/-/g, '+').replace(/_/g, '/'));
       }
 
-      await fetch(`${apiBase}/api/create`, {
+      const res = await fetch(`${apiBase}/api/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,6 +103,10 @@ export function useGmailSync() {
         },
         body: JSON.stringify({ MessageId: msg.id, from, date, subject, body }),
       });
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Server returned status ${res.status}: ${errorText}`);
+      }
       syncedCount++;
     }
     return syncedCount;

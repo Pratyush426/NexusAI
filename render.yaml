@@ -11,16 +11,11 @@ services:
         value: 10000
       - key: MONGO_URI
         sync: false # Set this securely in the Render Dashboard
-      - key: REDIS_HOST
+      - key: REDIS_URL
         fromService:
           type: redis
           name: jobtrack-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: jobtrack-redis
-          property: port
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: GROQ_API_KEY
@@ -38,16 +33,11 @@ services:
     envVars:
       - key: MONGO_URI
         sync: false # Must match Web Service
-      - key: REDIS_HOST
+      - key: REDIS_URL
         fromService:
           type: redis
           name: jobtrack-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: jobtrack-redis
-          property: port
+          property: connectionString
       - key: GROQ_API_KEY
         sync: false # Must match Web Service
 
